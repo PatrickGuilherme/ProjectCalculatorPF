@@ -16,7 +16,7 @@ int encontrar_TamArray(float valor)
 		cont++;	
 	}
 	
-	cont++;
+	if(cont!=0)cont++;
 	
 	while(true)
 	{
@@ -46,21 +46,22 @@ int conversao_binario(float valor, int* numCasas)
 		valor_aux = valor_aux/2;
 		i++;
 	}
-	numCasas[i] = (int)valor_aux;
-	
-	int j, aux[i + 1], k = 0;
-	
-	for(j = i; j >= 0; j--)
+	if(i != 0)
 	{
-		aux[k] = numCasas[j];
-		k++;		
+		numCasas[i] = (int)valor_aux;
+		int j, aux[i + 1], k = 0;
+		
+		for(j = i; j >= 0; j--)
+		{
+			aux[k] = numCasas[j];
+			k++;		
+		}
+		for(j = 0; j <= i; j++)
+		{
+			numCasas[j] = aux[j];
+		}
+		i++;
 	}
-	for(j = 0; j <= i; j++)
-	{
-		numCasas[j] = aux[j];
-	}
-	
-	i++;
 	posicaoVirgula = i;
 		
 	while(true)
@@ -80,10 +81,20 @@ int main()
 	float numero;
 	scanf("%f", &numero);
 	int numCasas[encontrar_TamArray(numero)];
-	int posicaoVirgula;
+	int expoente;
 	
-    posicaoVirgula = conversao_binario(numero, numCasas);
-    printf("%d/n", posicaoVirgula);
+    expoente = conversao_binario(numero, numCasas);
+    if(expoente == 0)
+	{
+		for(int i = 0; i < encontrar_TamArray(numero); i++)
+		{
+			if(numCasas[i] != 1) expoente--;
+			else break;
+		}
+	}
+	
+	expoente -= 1;
+    printf("%d\n", expoente);
     
     for(int i = 0; i < encontrar_TamArray(numero); i++)
 	{
