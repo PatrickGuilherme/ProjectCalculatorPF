@@ -20,10 +20,10 @@ int encontrar_TamArray(float valor)
 	
 	while(true)
 	{
+		if(valor_aux_Decimal >= 1) valor_aux_Decimal -= 1;
+		if(valor_aux_Decimal == 0) break;
 		valor_aux_Decimal = valor_aux_Decimal*2;
 		cont++;
-		if(valor_aux_Decimal >= 1) valor_aux_Decimal -= 1;
-		if(valor_aux_Decimal == 0) break;   
 	}
 	
 	return cont;
@@ -66,11 +66,11 @@ int conversao_binario(float valor, int* numCasas)
 		
 	while(true)
 	{
+		if(valor_aux_Decimal >= 1) valor_aux_Decimal -= 1;
+		if(valor_aux_Decimal == 0) break;   
 		valor_aux_Decimal = valor_aux_Decimal*2;
 		numCasas[i] = (int)valor_aux_Decimal;
 		i++;
-		if(valor_aux_Decimal >= 1) valor_aux_Decimal -= 1;
-		if(valor_aux_Decimal == 0) break;   
 	}
 	
 	return posicaoVirgula;	
@@ -78,12 +78,27 @@ int conversao_binario(float valor, int* numCasas)
 
 int main()
 {
+	int BIAS = 127, SINAL, MANTISSA[23], CARACTERISTICA[8], CARACTERISTICA_AUX[8];
+	
+	for(int i = 0; i < 23; i++)
+	{
+		MANTISSA[i] = 0;
+	}
+	
 	float numero;
 	scanf("%f", &numero);
+	
+	if(numero < 0)
+	{
+		numero = numero * -1;
+		SINAL = 1;	
+	}
+	else SINAL = 0;
+	
 	int numCasas[encontrar_TamArray(numero)];
 	int expoente;
-	
-    expoente = conversao_binario(numero, numCasas);
+	expoente = conversao_binario(numero, numCasas); 
+    
     if(expoente == 0)
 	{
 		for(int i = 0; i < encontrar_TamArray(numero); i++)
@@ -94,13 +109,49 @@ int main()
 	}
 	
 	expoente -= 1;
-    printf("%d\n", expoente);
+    printf("%d     %d\n", SINAL, expoente);
+    conversao_binario(BIAS + expoente, CARACTERISTICA_AUX);
     
-    for(int i = 0; i < encontrar_TamArray(numero); i++)
+  	//Aqui estamos colacando os ZEROS necessários para preencher o espaço de 8 bits das CARACTERISTICAS.  
+	int tam = 8 - encontrar_TamArray(BIAS + expoente);		
+	int cont = 1, i = 0;
+	for(i = 0; i < tam; i++)
 	{
-		printf("%d", numCasas[i]);
+	  CARACTERISTICA[i] = 0;
 	}
-    
+	int k = 0; 
+	for(int j = i; j < 8; j++)
+	{
+	   CARACTERISTICA[j] = CARACTERISTICA_AUX[k];
+	   k++;
+	}
+	
+	int inicio;
+	if(expoente < 0)
+	{
+		inicio = expoente * -1;
+	}
+	else inicio = 1;
+	
+	k = 0;
+	for(int i = inicio; i < encontrar_TamArray(numero); i++)
+	{
+		MANTISSA[k] = numCasas[i];
+		k++;
+	}
+	
+	printf("%d", SINAL);
+	printf(" ");
+	for(int i = 0; i < 7; i++)
+	{
+		printf("%d", CARACTERISTICA[i]);
+	}
+	printf(" ");
+	for(int i = 0; i < 23; i++)
+	{
+		printf("%d", MANTISSA[i]);
+	}
+	printf(" ");
 	return 0;
 }
 
