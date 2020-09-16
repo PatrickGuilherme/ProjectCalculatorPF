@@ -1,2 +1,2 @@
-# ProjetoCalculadoraPF
-Criação de uma calculadora de ponto flutuante
+# ProjectoCalculatorPF
+O projeto refere-se a uma calculadora de ponto flutuante desenvolvido na linguagem C
